@@ -40,8 +40,42 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
+function getPlayerSelection() {
+    let playerSelection = "";
+    do {
+        playerSelection = prompt("Enter your choice: rock/paper/scissors").toLowerCase();
+    } while (playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors");
 
-const playerSelection = "rock";
-const computerSelection = getComputerChoice();
-console.log("computer selection: " + computerSelection)
-console.log(playRound(playerSelection, computerSelection));
+    return playerSelection;
+}
+
+function game() {
+    let playerScore = 0;
+    let computerScore = 0;
+    let winner = "";
+    for (let i = 1; i <= 5; i++) {
+        let computerSelection = getComputerChoice();
+        let playerSelection = getPlayerSelection();
+        console.log(`Round ${i}: computer: ${computerSelection} vs player: ${playerSelection}`);
+        let message = playRound(playerSelection, computerSelection);
+        console.log(message);
+        if (message.charAt(4) === "w") {
+            playerScore++;
+        } else if (message.charAt(4) === "l") {
+            computerScore++;
+        }
+    }
+    if (computerScore > playerScore) {
+        console.log(`Winner is computer with ${computerScore} points vs ${playerScore}`);
+        return winner = "computer";
+    } else if (playerScore > computerScore) {
+        console.log(`Winner is player  with ${playerScore} points vs ${computerScore}`);
+        return winner = "player";
+    } else {
+        console.log("Tie");
+        return "tie"
+    }
+
+}
+
+game();
