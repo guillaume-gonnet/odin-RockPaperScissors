@@ -16,66 +16,93 @@ function getComputerChoice() {
 
 function playRound(playerSelection, computerSelection) {
     if (playerSelection === computerSelection) {
-        return "Tie";
+        return "Nobody";
     }
 
     if (playerSelection === "rock") {
         if (computerSelection === "scissors") {
-            return "You win! Rock beats Scissors!"
+            return "You";
         } else if (computerSelection === "paper") {
-            return "You lost! Paper beats Rock!"
+            return "Computer";
         }
     } else if (playerSelection === "scissors") {
         if (computerSelection === "rock") {
-            return "You lost! Rock beats Scissors!"
+            return "Computer";
         } else if (computerSelection === "paper") {
-            return "You win! Scissors beat Paper!"
+            return "You";
         }
     } else if (playerSelection === "paper") {
         if (computerSelection === "rock") {
-            return "You win! Paper beats Rock!"
+            return "You";
         } else if (computerSelection === "scissors") {
-            return "You lost! Scissors beat Paper!"
+            return "Computer";
         }
     }
 }
 
-function getPlayerSelection() {
-    let playerSelection = "";
-    do {
-        playerSelection = prompt("Enter your choice: rock/paper/scissors").toLowerCase();
-    } while (playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors");
+function updateWinner(winner) {
+    document.querySelector('#result-round').textContent = `Winner of this round is ${winner}`;
+};
 
-    return playerSelection;
-}
 
 function game() {
-    let playerScore = 0;
-    let computerScore = 0;
+    let winnerRound = "";
     let winner = "";
-    for (let i = 1; i <= 5; i++) {
-        let computerSelection = getComputerChoice();
-        let playerSelection = getPlayerSelection();
-        console.log(`Round ${i}: computer: ${computerSelection} vs player: ${playerSelection}`);
-        let message = playRound(playerSelection, computerSelection);
-        console.log(message);
-        if (message.charAt(4) === "w") {
-            playerScore++;
-        } else if (message.charAt(4) === "l") {
-            computerScore++;
-        }
-    }
-    if (computerScore > playerScore) {
-        console.log(`Winner is computer with ${computerScore} points vs ${playerScore}`);
-        return winner = "computer";
-    } else if (playerScore > computerScore) {
-        console.log(`Winner is player  with ${playerScore} points vs ${computerScore}`);
-        return winner = "player";
-    } else {
-        console.log("Tie");
-        return "tie"
+    let round = 0;
+    let player = {
+        score: 0,
+        name: 'player',
+    };
+    let computer = {
+        score: 0,
+        name: 'computer',
     }
 
+    document.querySelectorAll('button').forEach(btn => {
+
+        btn.addEventListener('click', e => {
+            e.stopPropagation;
+            let playerSelection = '';
+            switch (e.target.id) {
+                case 'button-rock':
+                    playerSelection = 'rock';
+                    break;
+                case 'button-paper':
+                    playerSelection = 'paper';
+                    break;
+                case 'button-scissors':
+                    playerSelection = 'scissors';
+                    break;
+            };
+            winnerRound = playRound(playerSelection, getComputerChoice());
+            updateWinner(winnerRound);
+            if (winnerRound === "You") {
+                player.score++;
+            } else if (winnerRound === "Computer") {
+                computer.score++;
+            }
+            round++;
+            if (round === 5) {
+                endGame(player, computer);
+            }
+        }, false);
+    });
+
+
+
+
+}
+
+function endGame(player, computer) {
+    let winnerGame = '';
+    if (computer.score > player.score) {
+        winnerGame = "computer";
+    } else if (player.score > computer.score) {
+        winnerGame = "player";
+    } else {
+        winnerGame = "Nobody";
+    }
+    document.querySelector('#result-game').textContent = `Winner of this game is ${winnerGame}`;
 }
 
 game();
